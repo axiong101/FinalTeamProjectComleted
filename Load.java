@@ -20,103 +20,112 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Filename: Load.java Project: 
+ * Team Project Authors: Cha Vang, Ger Vang, Alvin Xiong, Kao Yang
+ *
+ * Semester: Spring 2019 Course: CS400 Lecture: Andy: 004
+ * 
+ * 
+ * Due Date: Before 11:59 pm on May 3
+ *
+ * 
+ */
 public class Load {
-  static FileChooser fileChooser = new FileChooser();
+	static FileChooser fileChooser = new FileChooser(); // stores file chosen by users
 
-  public static void display(QuizGraph graph) {
-    Stage window = new Stage();
-    window.initModality(Modality.APPLICATION_MODAL);
-    window.setTitle("Load");
-    window.setMinWidth(250);
-    VBox vb = new VBox();
-    vb.setPadding(new Insets(100, 100, 100, 100));
-    vb.setSpacing(10);
-    Button pick = new Button("Pick A JSON File To Load");
+	/*
+	 * Method that prompts for a Json file and loads it
+	 * 
+	 * @ param graph
+	 */
+	public static void display(QuizGraph graph) {
+		Stage window = new Stage();
+		window.initModality(Modality.APPLICATION_MODAL); // makes the pop up window
+		window.setTitle("Load");
+		window.setMinWidth(250);
+		VBox vb = new VBox();
+		vb.setPadding(new Insets(100, 100, 100, 100));
+		vb.setSpacing(10);
+		Button pick = new Button("Pick A JSON File To Load"); // prompts user
 
-    pick.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(final ActionEvent e) {
-        try {
-          File file = fileChooser.showOpenDialog(window);
-          File existDirectory = file.getParentFile();
-          fileChooser.setInitialDirectory(existDirectory);
-          if (file != null) {
+		pick.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent e) {
+				try {
+					File file = fileChooser.showOpenDialog(window); // takes in files and store it
+					File existDirectory = file.getParentFile();
+					fileChooser.setInitialDirectory(existDirectory);
+					if (file != null) {
 
-            loadHelper(file, graph);
-            
-          }
-          Warning.display("Success", "Sucessfully Loaded Questions to Program", false);
-          window.close();
-        } catch (IOException | org.json.simple.parser.ParseException e1) {
-          Warning.display("IOException", "Encounter an IOException", true);
-        } catch (Exception e2) {
-          
-        }
-       
-       
-      }
+						loadHelper(file, graph); // calls helper method to load file info into graph
 
-    });
-    vb.getChildren().add(pick);
-    Scene scene = new Scene(vb);
-    window.setScene(scene);
-    window.showAndWait();
-  }
+					}
+					Warning.display("Success", "Sucessfully Loaded Questions to Program", false);
+					window.close();
+				} catch (IOException | org.json.simple.parser.ParseException e1) {
+					Warning.display("IOException", "Encounter an IOException", true);
+				} catch (Exception e2) {
 
-  private static void loadHelper(File file, QuizGraph graph)
-      throws FileNotFoundException, IOException, org.json.simple.parser.ParseException {
+				}
 
-    Object obj = new JSONParser().parse(new FileReader(file));
-    JSONObject jo = (JSONObject) obj;
-    JSONArray packageArray = (JSONArray) jo.get("questionArray");
+			}
 
-    for (Object o : packageArray) {
-      ArrayList<AnswerNode> a = new ArrayList<AnswerNode>();
-      QuestionNode q;
-      String image;
-      String topic;
-      boolean isCorrect;
-      // boolean ToF = false;
-      JSONObject question = (JSONObject) o;
+		});
+		vb.getChildren().add(pick);
+		Scene scene = new Scene(vb);
+		window.setScene(scene);
+		window.showAndWait();
+	}
 
-      // String ToFQuestion = (String) question.get("meta-data");
-      // if(!ToFQuestion.equals("unused")){
-      // if(ToFQuestion.equals("true") || ToFQuestion.equals("false")) {
-      // if(ToFQuestion.equalsIgnoreCase("true")) {
-      // ToF = true;
-      // } else {
-      // ToF = false;
-      // }
-      // }
-      // }
-      String questionText = (String) question.get("questionText");
+	/*
+	 * Private helper that takes in a Json File and upload it into the QuizGraph
+	 * 
+	 * @param file,graph
+	 */
+	private static void loadHelper(File file, QuizGraph graph)
+			throws FileNotFoundException, IOException, org.json.simple.parser.ParseException {
 
-      topic = (String) question.get("topic");
-      graph.addTopic(topic);
+		Object obj = new JSONParser().parse(new FileReader(file));
+		JSONObject jo = (JSONObject) obj;
+		JSONArray packageArray = (JSONArray) jo.get("questionArray");
 
-      image = (String) question.get("image");
+		for (Object o : packageArray) { // loops through questionArray put them into the graph
+			ArrayList<AnswerNode> a = new ArrayList<AnswerNode>();
+			QuestionNode q;
+			String image;
+			String topic;
+			boolean isCorrect;
 
-      JSONArray choice = (JSONArray) question.get("choiceArray");
-      for (Object c : choice) {
-        JSONObject array = (JSONObject) c;
-        String choiceForGraph = (String) array.get("choice");
-        String sToF = (String) array.get("isCorrect");
-        if (sToF.equals("T")) {
-          isCorrect = true;
-          a.add(new AnswerNode(choiceForGraph, isCorrect));
-        } else {
-          isCorrect = false;
-          a.add(new AnswerNode(choiceForGraph, isCorrect));
-        }
-      }
-      if (a.size() == 5) {
-        q = new QuestionNode(questionText, a.get(0), a.get(1), a.get(2), a.get(3), a.get(4), false,
-            image);
-        graph.addQuestion(topic, q);
-      } else {
-        q = new QuestionNode(questionText, a.get(0), a.get(1), true, image);
-        graph.addQuestion(topic, q);
-      }
-    }
-  }
+			JSONObject question = (JSONObject) o;
+
+			String questionText = (String) question.get("questionText");
+
+			topic = (String) question.get("topic");
+			graph.addTopic(topic);
+
+			image = (String) question.get("image"); // stores images if exists
+
+			JSONArray choice = (JSONArray) question.get("choiceArray");
+			for (Object c : choice) {
+				JSONObject array = (JSONObject) c;
+				String choiceForGraph = (String) array.get("choice");
+				String sToF = (String) array.get("isCorrect");
+				if (sToF.equals("T")) { // if answer is true
+					isCorrect = true;
+					a.add(new AnswerNode(choiceForGraph, isCorrect));
+				} else {
+					isCorrect = false; // if answer is false
+					a.add(new AnswerNode(choiceForGraph, isCorrect));
+				}
+			}
+			if (a.size() == 5) { // checks if it's multiple choice
+				q = new QuestionNode(questionText, a.get(0), a.get(1), a.get(2), a.get(3), a.get(4), false, image);
+				graph.addQuestion(topic, q);
+			} else { // else its true/false
+				q = new QuestionNode(questionText, a.get(0), a.get(1), true, image);
+				graph.addQuestion(topic, q);
+			}
+		}
+	}
 }
