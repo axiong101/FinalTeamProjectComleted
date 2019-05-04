@@ -117,7 +117,7 @@ public class QuestionScreen {
     if (questionTested.getImage() != null && !questionTested.getImage().equals("none")) {
       image = new Image(questionTested.getImage());
       ImageView imageV = new ImageView(image);
-      imageV.setFitHeight(200); 
+      imageV.setFitHeight(200);
       imageV.setFitWidth(200);
       imageV.setPreserveRatio(true);
       root.setCenter(imageV);
@@ -133,6 +133,7 @@ public class QuestionScreen {
 
   /**
    * handles the action when button is pressed, goes to correct screen
+   * 
    * @param correct
    */
   private void handleButton(boolean correct) {
