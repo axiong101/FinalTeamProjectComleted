@@ -29,18 +29,19 @@ public class Warning {
     Label warning = new Label();
     warning.setText(message);
 
+    // initializing the buttons and layout
     VBox layout = new VBox();
     if (closeProgram == true) {
       cancel = new Button("cancel");
       exitButton = new Button("yes, exit anyways");
       layout.getChildren().addAll(warning, cancel, exitButton);
 
-
+      // sets the cancel button to an action
       cancel.setOnAction(e -> {
         anwser = false;
         window.close();
       });
-
+      // sets the exitButton's to an action
       exitButton.setOnAction(e -> {
         anwser = true;
         window.close();
@@ -48,13 +49,13 @@ public class Warning {
     } else {
       cancel = new Button("close");
       layout.getChildren().addAll(warning, cancel);
-      
+
       cancel.setOnAction(e -> {
         anwser = false;
         window.close();
       });
     }
-
+    // sets the spacing of the scene
     layout.setSpacing(10.0);
     layout.setAlignment(Pos.CENTER);
     Scene scene = new Scene(layout);

@@ -34,6 +34,7 @@ public class Save extends Button {
   static String file;
   static boolean answer;
 
+  // saveHelper to save the data of our graph to a JSON file
   public static void saveHelper(String newFileName, QuizGraph quiz) throws FileNotFoundException,
       IOException, ParseException, org.json.simple.parser.ParseException {
 
@@ -45,7 +46,7 @@ public class Save extends Button {
 
 
     Set<String> topics = quiz.getAllTopics();
-
+    // for loop to get the data into their labeled area inside the JSON file
     for (String topic : topics) {
       ArrayList<QuestionNode> questions = quiz.getTopicQuestions(topic);
       for (QuestionNode q : questions) {
@@ -58,17 +59,16 @@ public class Save extends Button {
         } else {
           m.put("image", q.getImage());
         }
-   
+
         JSONArray answerArray = new JSONArray();
         ArrayList<AnswerNode> answers = q.getAnswerList();
         for (AnswerNode answer : answers) {
           Map<String, String> mA = new LinkedHashMap<String, String>(2);
-          
+
           String correct;
           if (answer.getCorrect()) {
             correct = "T";
-          }
-          else {
+          } else {
             correct = "F";
           }
           mA.put("isCorrect", correct);
@@ -80,7 +80,7 @@ public class Save extends Button {
       }
 
     }
-    try {
+    try { // FileWrtier to save the files
       FileWriter pw = new FileWriter(newFileName);
       pw.write(jasonSaveFile.toJSONString());
       pw.flush();
@@ -92,6 +92,7 @@ public class Save extends Button {
 
   }
 
+  // provides the functionality of the saveMethod
   public static void saveMethod(String Title, String message, QuizGraph qg) {
     Stage window = new Stage();
     window.initModality(Modality.APPLICATION_MODAL);
@@ -101,24 +102,22 @@ public class Save extends Button {
     save.setText(message);
 
 
-
+    // sets the buttons
     Button yButton = new Button("Yes");
     Button nButton = new Button("No");
 
 
-
+    // sets actions of buttons
     yButton.setOnAction(e -> {
       try {
         createFile(qg);
       } catch (Exception e2) {
         e2.printStackTrace();
       }
-      // answer = true;
       window.close();
     });
 
     nButton.setOnAction(e -> {
-      // answer = false;
       window.close();
     });
 
@@ -129,9 +128,9 @@ public class Save extends Button {
     window.setScene(scene);
     window.showAndWait();
 
-    // return answer;
   }
 
+  // private method to create a file and calls on the helper
   private static void createFile(QuizGraph quiz) {
     Stage window = new Stage();
     window.initModality(Modality.APPLICATION_MODAL);
@@ -147,7 +146,7 @@ public class Save extends Button {
     for (String file : fileArray) {
       allFiles.getItems().add(file);
     }
-
+    // sets the action of set
     save.setOnAction(e -> {
       try {
         saveHelper(newFile.getText(), quiz);
@@ -165,6 +164,7 @@ public class Save extends Button {
     window.showAndWait();
   }
 
+  // get all the files of the folder's directory given by the user
   private static ArrayList<String> getAllFiles() {
     File folder = new File(System.getProperty("user.dir") + "\\saveFiles");
     File[] listOfFiles = folder.listFiles();
