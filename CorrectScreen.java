@@ -25,6 +25,18 @@ public class CorrectScreen {
   ArrayList<QuestionNode> questionList;
   int totalCorrect;
 
+  /**
+   * Scene that shows if the user got the question correct or not
+   * 
+   * @param primaryStage
+   * @param mainScene
+   * @param qNum
+   * @param maxQuestions
+   * @param correct
+   * @param quiz
+   * @param questionList
+   * @param totalCorrect
+   */
   protected CorrectScreen(Stage primaryStage, Scene mainScene, int qNum, int maxQuestions,
       boolean correct, QuizGraph quiz, ArrayList<QuestionNode> questionList, int totalCorrect) {
 
@@ -37,7 +49,7 @@ public class CorrectScreen {
     this.mainScene = mainScene;
     root = new BorderPane();
     HBox label = new HBox();
-    if (correct) {
+    if (correct) { // displays statement based on if user is correct or not
       correctL = new Label("You Answered Correct");
       correctL.setFont(new Font("Times New Roman", 60));
     } else {
@@ -61,12 +73,21 @@ public class CorrectScreen {
 
   }
 
-
+  /**
+   * get the scene created by this class
+   * 
+   * @return
+   */
   public Scene getScene() {
     // TODO Auto-generated method stub
     return correctScreen;
   }
 
+  /**
+   * handle the action when the next button is clicked and goes to the next Question or Total score
+   * based on if the max number of questions user wanted to take was reached or the max number
+   * possible was reached
+   */
   private void HandleButton() {
     if (qNum == maxQuestions + 1 || qNum == questionList.size() + 1) {
       int numTaken;

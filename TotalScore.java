@@ -18,6 +18,14 @@ public class TotalScore {
    Stage primaryStage;
    Scene mainScene;
    Scene totalScoreScene;
+   
+   /**
+    * Creates the totalScore screen that displays the user number of Correct
+    * @param primaryStage
+    * @param mainScene
+    * @param numTaken
+    * @param totalCorrect
+    */
    public TotalScore(Stage primaryStage, Scene mainScene, int numTaken, int totalCorrect) {
      this.primaryStage = primaryStage;
      this.mainScene = mainScene;
@@ -29,7 +37,7 @@ public class TotalScore {
      Label tx = new Label();
      score.setFont(new Font("Times New Roman", 25));
      score.setText("Total Score:");
-     double percentCorrect = (totalCorrect/numTaken) * 100;
+     double percentCorrect = ((double) totalCorrect/(double) numTaken) * 100.00; // displays user percentage correct
      tx.setText(Double.valueOf(percentCorrect) + "%");
      
      Button mainMenu = new Button("Main Menu");
@@ -42,9 +50,13 @@ public class TotalScore {
     
      
      totalScoreScene = new Scene(layout, 800, 400);
-     mainMenu.setOnAction(e -> primaryStage.setScene(mainScene));
+     mainMenu.setOnAction(e -> primaryStage.setScene(mainScene)); // return to main scene when clicked
    }
    
+   /**
+    * get scene created by this class 
+    * @return
+    */
    public Scene getScene() {
      return totalScoreScene;
    }

@@ -34,14 +34,21 @@ public class TakeQuizButton {
   BorderPane root;
   Button helper;
   Button next;
-  int maxQuestions;
+  int maxQuestions; // num questions user wants to take
   int qNum;
   ComboBox<String> topic;
   String topicTested;
   ArrayList<QuestionNode> questionList;
   QuizGraph quiz;
 
-
+  /**
+   * Scene that stores the scene to takeQuiz
+   * 
+   * @param primaryStage - main user stage
+   * @param mainScene - main user scen
+   * @param qNum - num question user is on
+   * @param quiz - quizgraph
+   */
   protected TakeQuizButton(Stage primaryStage, Scene mainScene, int qNum, QuizGraph quiz) {
 
     this.quiz = quiz;
@@ -67,14 +74,13 @@ public class TakeQuizButton {
     whatTopic.setAlignment(Pos.CENTER);
     topic = new ComboBox<String>();
     Set<String> topics = quiz.getAllTopics();
-
     for (String t : topics) {
       topic.getItems().add(t);
     }
     topic.scaleShapeProperty();
     Label HowManyQuestions = new Label("How Many Questions?");
     HowManyQuestions.setAlignment(Pos.CENTER);
-    TextField numQuestion = new TextField();
+    TextField numQuestion = new TextField();// takes in user number of questions to take
     numQuestion.setPrefColumnCount(1);
     numQuestion.setPrefHeight(1);
     HBox buttonHBox = new HBox();
@@ -84,13 +90,13 @@ public class TakeQuizButton {
     next.setTranslateY(15);
     next.setTranslateX(45);
     buttonHBox.getChildren().addAll(back, next);
-    back.setOnAction(e -> primaryStage.setScene(mainScene));
-    topicBox.getChildren().addAll(whatTopic,topic, HowManyQuestions, numQuestion, buttonHBox);
+    back.setOnAction(e -> primaryStage.setScene(mainScene)); // goes back to main scene
+    topicBox.getChildren().addAll(whatTopic, topic, HowManyQuestions, numQuestion, buttonHBox);
     hbox.getChildren().add(topicBox);
     hbox.setAlignment(Pos.CENTER);
     vbox.getChildren().add(hbox);
     vbox.setAlignment(Pos.CENTER);
-    
+
     root.setCenter(vbox);
 
 
@@ -115,23 +121,33 @@ public class TakeQuizButton {
 
   }
 
+  /**
+   * gets the scene created by class
+   * 
+   * @return
+   */
   public Scene getScene() {
     return takeButtonQuizScene;
   }
 
 
-
+  /**
+   * handles the next button action and goes to question screen
+   * 
+   * @param numQuestions
+   * @param quiz
+   */
   private void HandleButton(String numQuestions, QuizGraph quiz) {
     try {
-      questionList = quiz.getTopicQuestions(topicTested);
-      Collections.shuffle(questionList);
+      questionList = quiz.getTopicQuestions(topicTested); // get Arraylist of questions based on
+                                                          // topic selected
+      Collections.shuffle(questionList); // shuffle question Array list so quiz is random
       primaryStage.setScene(new QuestionScreen(primaryStage, mainScene, this.qNum,
           Integer.valueOf(numQuestions), quiz, questionList, 0).getScene());
     } catch (NumberFormatException e1) {
       boolean answer = Warning.display("WARNING!",
           "  You did not type in a number, Please Type in a Number  ", false);
     } catch (Exception e2) {
-      e2.printStackTrace();
       boolean answer = Warning.display("WARNING!",
           "  No topic selected or there are no questions for topic yet.  \n  Please select a topic or"
               + " go back and add question to topic.  ",
